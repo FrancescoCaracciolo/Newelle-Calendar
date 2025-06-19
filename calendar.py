@@ -12,7 +12,8 @@ from datetime import datetime, date, timedelta
 from typing import List, Dict, Optional, Tuple
 from dateutil import tz
 import uuid
-from .handlers import ExtraSettings
+from .handlers import ExtraSettings, PromptDescription
+
 
 class CalendarExtension(NewelleExtension):
     id = "calendar"
@@ -45,26 +46,12 @@ class CalendarExtension(NewelleExtension):
 
     def get_additional_prompts(self) -> list:
         return [
-            {
-                "key": "calendar_operations",
-                "title": "Calendar Operations",
-                "description": "Perform calendar operations",
-                "editable": True,
-                "show_in_settings": True,
-                "default": True,
-                "setting_name": "calendar_operations",
-                "text": "- You can add an event to the calendar using:\n```addevent\nevent_name\nstart_time\nend_time\n```\n\nDate format: Use ISO format YYYY-MM-DD HH:MM (e.g., 2024-01-15 14:30)\nFor all-day events, use YYYY-MM-DD (e.g., 2024-01-15)\n\n- You can remove an event from the calendar using:\n```removeevent\nevent_name\nevent_date\n```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nThis will remove the first event with matching name on the specified date.\n\n- You can edit an event in the calendar using:\n```editevent\noriginal_event_name\noriginal_event_date\nnew_event_name\nnew_start_time\nnew_end_time\n```\n\nDate format: Use ISO format YYYY-MM-DD HH:MM (e.g., 2024-01-15 14:30)\nFor all-day events, use YYYY-MM-DD (e.g., 2024-01-15)\nThis will find and update the first event with matching name on the specified date."
-            },
-            {
-                "key": "read_calendar",
-                "title": "Read Calendar",
-                "description": "Read and search calendar",
-                "editable": True,
-                "show_in_settings": True,
-                "default": True,
-                "setting_name": "read_calendar",
-                "text": "- You can open the calendar using:\n```calendar\nopen\n```\n\n- You can search for events using:\n```searchevent\nevent_name\nstart_date\nend_date\n```\n\nSearch options:\n- Search by name only: ```searchevent\nevent_name```\n- Search by date only: ```searchevent\n\ndate```\n- Search by name and date: ```searchevent\nevent_name\ndate```\n- Search by date range: ```searchevent\nevent_name\nstart_date\nend_date```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nLeave event_name empty to search all events in date range.\n\n- You can list the next 20 upcoming events using:\n```events\nlist\n```\n\nThis will show the next 20 events starting from today, sorted by date and time."
-            }
+            PromptDescription("calendar_operations", "Calendar Operations", "Perform calendar operations",
+                text="- You can add an event to the calendar using:\n```addevent\nevent_name\nstart_time\nend_time\n```\n\nDate format: Use ISO format YYYY-MM-DD HH:MM (e.g., 2024-01-15 14:30)\nFor all-day events, use YYYY-MM-DD (e.g., 2024-01-15)\n\n- You can remove an event from the calendar using:\n```removeevent\nevent_name\nevent_date\n```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nThis will remove the first event with matching name on the specified date.\n\n- You can edit an event in the calendar using:\n```editevent\noriginal_event_name\noriginal_event_date\nnew_event_name\nnew_start_time\nnew_end_time\n```\n\nDate format: Use ISO format YYYY-MM-DD HH:MM (e.g., 2024-01-15 14:30)\nFor all-day events, use YYYY-MM-DD (e.g., 2024-01-15)\nThis will find and update the first event with matching name on the specified date."
+            ),
+            PromptDescription("read_calendar", "Read Calendar", "Read and search calendar",
+                text="- You can open the calendar using:\n```calendar\nopen\n```\n\n- You can search for events using:\n```searchevent\nevent_name\nstart_date\nend_date\n```\n\nSearch options:\n- Search by name only: ```searchevent\nevent_name```\n- Search by date only: ```searchevent\n\ndate```\n- Search by name and date: ```searchevent\nevent_name\ndate```\n- Search by date range: ```searchevent\nevent_name\nstart_date\nend_date```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nLeave event_name empty to search all events in date range.\n\n- You can list the next 20 upcoming events using:\n```events\nlist\n```\n\nThis will show the next 20 events starting from today, sorted by date and time."
+            )
         ]
 
     def provides_both_widget_and_answer(self, codeblock: str, lang: str) -> bool:
