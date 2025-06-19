@@ -14,7 +14,6 @@ from dateutil import tz
 import uuid
 from .handlers import ExtraSettings
 
-
 class CalendarExtension(NewelleExtension):
     id = "calendar"
     name = "Calendar"
@@ -31,7 +30,7 @@ class CalendarExtension(NewelleExtension):
 
     def get_extra_settings(self) -> list:
         return super().get_extra_settings() + [
-            ExtraSettings.MultilineEntrySetting("ical_files", "iCalendar Files", "Newline separated list of iCalendar (ics) files", "~/.local/share/evolution/calendar/system/calendar.ics"),
+            ExtraSettings.MultilineEntrySetting("calendar_files", "iCalendar Files", "Newline separated list of iCalendar (ics) files", "~/.local/share/evolution/calendar/system/calendar.ics"),
         ]
 
     def save_cache(self):
@@ -42,7 +41,7 @@ class CalendarExtension(NewelleExtension):
             install_module("icalendar", self.pip_path)
 
     def get_replace_codeblocks_langs(self) -> list:
-        return ["calendar", "addevent", "removeevent", "editevent", "searchevent", "upcomingevents"]
+        return ["calendar", "addevent", "removeevent", "editevent", "searchevent", "events"]
 
     def get_additional_prompts(self) -> list:
         return [
@@ -64,12 +63,12 @@ class CalendarExtension(NewelleExtension):
                 "show_in_settings": True,
                 "default": True,
                 "setting_name": "read_calendar",
-                "text": "- You can open the calendar using:\n```calendar\nopen\n```\n\n- You can search for events using:\n```searchevent\nevent_name\nstart_date\nend_date\n```\n\nSearch options:\n- Search by name only: ```searchevent\nevent_name```\n- Search by date only: ```searchevent\n\ndate```\n- Search by name and date: ```searchevent\nevent_name\ndate```\n- Search by date range: ```searchevent\nevent_name\nstart_date\nend_date```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nLeave event_name empty to search all events in date range.\n\n- You can list the next 20 upcoming events using:\n```upcomingevents\nlist\n```\n\nThis will show the next 20 events starting from today, sorted by date and time."
+                "text": "- You can open the calendar using:\n```calendar\nopen\n```\n\n- You can search for events using:\n```searchevent\nevent_name\nstart_date\nend_date\n```\n\nSearch options:\n- Search by name only: ```searchevent\nevent_name```\n- Search by date only: ```searchevent\n\ndate```\n- Search by name and date: ```searchevent\nevent_name\ndate```\n- Search by date range: ```searchevent\nevent_name\nstart_date\nend_date```\n\nDate format: Use ISO format YYYY-MM-DD (e.g., 2024-01-15)\nLeave event_name empty to search all events in date range.\n\n- You can list the next 20 upcoming events using:\n```events\nlist\n```\n\nThis will show the next 20 events starting from today, sorted by date and time."
             }
         ]
 
     def provides_both_widget_and_answer(self, codeblock: str, lang: str) -> bool:
-        if lang in ["calendar", "searchevent", "upcomingevents"]:
+        if lang in ["calendar", "searchevent", "events"]:
             return True
         return False
 
@@ -93,7 +92,7 @@ class CalendarExtension(NewelleExtension):
             if self.last_error_message:
                 return self.last_error_message
             return self._format_search_results(self.last_search_results)
-        elif lang == "upcomingevents":
+        elif lang == "events":
             if self.last_error_message:
                 return self.last_error_message
             return self._format_upcoming_events(self.last_upcoming_events)
@@ -353,7 +352,7 @@ class CalendarExtension(NewelleExtension):
             except ValueError:
                 return create_error_button("Invalid date format")
 
-        elif lang == "upcomingevents":
+        elif lang == "events":
             try:
                 calendar_manager = self.get_calendar_manager()
                 upcoming_events = calendar_manager.get_upcoming_events(date.today(), limit=20)
@@ -376,7 +375,7 @@ class CalendarExtension(NewelleExtension):
         return self.calendar_manager
 
     def refresh_calendar_manager(self):
-        calendar_files = [os.path.expanduser(path) for path in self.get_setting("calendar_files")]
+        calendar_files = [os.path.expanduser(path) for path in self.get_setting("calendar_files").split("\n")]
         self.calendar_manager = CalendarManager(calendar_files)
         return self.calendar_manager
 
