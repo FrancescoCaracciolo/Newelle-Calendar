@@ -12,7 +12,7 @@ from datetime import datetime, date, timedelta
 from typing import List, Dict, Optional, Tuple
 from dateutil import tz
 import uuid
-from .handlers import ExtraSettings, PromptDescription
+from .handlers import ExtraSettings, PromptDescription, TabButtonDescription
 
 
 class CalendarExtension(NewelleExtension):
@@ -43,6 +43,11 @@ class CalendarExtension(NewelleExtension):
 
     def get_replace_codeblocks_langs(self) -> list:
         return ["calendar", "addevent", "removeevent", "editevent", "searchevent", "events"]
+
+    def add_tab_menu_entries(self) -> list:
+        return [
+            TabButtonDescription("Calendar tab", "month-symbolic", lambda x, y: self.open_calendar(x))
+        ]
 
     def get_additional_prompts(self) -> list:
         return [
