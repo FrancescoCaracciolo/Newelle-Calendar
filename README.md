@@ -1,6 +1,10 @@
 # Newelle Calendar
+  <a href="https://github.com/topics/newelle-extension">
+    <img width="150" alt="Download on Flathub" src="https://raw.githubusercontent.com/qwersyk/Assets/main/newelle-extension.svg"/>
+  </a>
 
-Newelle Calendar is an extension that allows Newelle to manage ics calendars (including the system calendar).
+
+**Newelle Calendar** is an extension that allows Newelle to manage ics calendars (including the system calendar).
 
 **Features**:
 - 📅 **Support for mulitple calendars**: Add multiple calendar files to interact with
