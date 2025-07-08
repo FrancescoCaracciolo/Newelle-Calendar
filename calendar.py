@@ -46,7 +46,7 @@ class CalendarExtension(NewelleExtension):
 
     def add_tab_menu_entries(self) -> list:
         return [
-            TabButtonDescription("Calendar tab", "month-symbolic", lambda x, y: self.open_calendar(x))
+            TabButtonDescription("Calendar tab", "view-calendar-day-symbolic", lambda x, y: self.open_calendar(x))
         ]
 
     def get_additional_prompts(self) -> list:
@@ -382,7 +382,7 @@ class CalendarExtension(NewelleExtension):
         
         tab = self.ui_controller.add_tab(calendar_widget)
         tab.set_title("Calendar")
-        tab.set_icon(Gio.ThemedIcon(name="month-symbolic"))
+        tab.set_icon(Gio.ThemedIcon(name="view-calendar-day-symbolic"))
 
     def _search_events_by_name(self, calendar_manager, event_name):
         """Search for events by name across all dates."""
@@ -1149,7 +1149,7 @@ class CalendarButton(Gtk.Button):
         main_box.set_margin_bottom(8)
         
         # Calendar icon on the left
-        self.icon = Gtk.Image.new_from_icon_name("month-symbolic")
+        self.icon = Gtk.Image.new_from_icon_name("view-calendar-day-symbolic")
         self.icon.set_icon_size(Gtk.IconSize.NORMAL)
         main_box.append(self.icon)
         
