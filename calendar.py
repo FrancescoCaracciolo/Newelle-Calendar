@@ -34,6 +34,15 @@ class CalendarExtension(NewelleExtension):
             ExtraSettings.MultilineEntrySetting("calendar_files", "iCalendar Files", "Newline separated list of iCalendar (ics) files", "~/.local/share/evolution/calendar/system/calendar.ics"),
         ]
 
+    def preprocess_history(self, history: list, prompts: list) -> tuple[list, list]:
+        for i, prompt in enumerate(prompts):
+            if "{CALENDAR}" in prompt:
+                calendar_manager = self.get_calendar_manager()
+                upcoming_events = calendar_manager.get_upcoming_events(date.today(), limit=20)
+                prompt = prompt.replace("{CALENDAR}", self._format_upcoming_events(upcoming_events))
+                prompts[i] = prompt
+        return history, prompts
+
     def save_cache(self):
         self.set_setting("cache", json.dumps(self.caches))
 
